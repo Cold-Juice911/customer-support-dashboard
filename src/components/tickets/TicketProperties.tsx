@@ -9,7 +9,7 @@ import {
 import { formatDate } from '../../lib/utils';
 import { useTicketStore } from '../../store/ticketStore';
 import { Avatar } from '../ui/Avatar';
-import { Select } from '../ui/Select';
+import { Dropdown } from '../ui/Dropdown';
 
 export function TicketProperties({ ticket }: { ticket: Ticket }) {
   const updateStatus = useTicketStore((state) => state.updateTicketStatus);
@@ -39,35 +39,27 @@ export function TicketProperties({ ticket }: { ticket: Ticket }) {
         <div>
           <dt className="mb-2 text-xs font-medium text-secondary">Status</dt>
           <dd>
-            <Select
+            <Dropdown
               aria-label="Ticket status"
               value={ticket.status}
-              onChange={(event) => {
-                if (isStatus(event.target.value))
-                  updateStatus(ticket.id, event.target.value);
+              onChange={(value) => {
+                if (isStatus(value)) updateStatus(ticket.id, value);
               }}
-            >
-              {STATUSES.map((value) => (
-                <option key={value}>{value}</option>
-              ))}
-            </Select>
+              options={STATUSES.map((value) => ({ value, label: value }))}
+            />
           </dd>
         </div>
         <div>
           <dt className="mb-2 text-xs font-medium text-secondary">Priority</dt>
           <dd>
-            <Select
+            <Dropdown
               aria-label="Ticket priority"
               value={ticket.priority}
-              onChange={(event) => {
-                if (isPriority(event.target.value))
-                  updatePriority(ticket.id, event.target.value);
+              onChange={(value) => {
+                if (isPriority(value)) updatePriority(ticket.id, value);
               }}
-            >
-              {PRIORITIES.map((value) => (
-                <option key={value}>{value}</option>
-              ))}
-            </Select>
+              options={PRIORITIES.map((value) => ({ value, label: value }))}
+            />
           </dd>
         </div>
         <div className="col-span-2">

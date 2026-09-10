@@ -2,7 +2,7 @@ import { ListFilter, X } from 'lucide-react';
 import { PRIORITIES, STATUSES, isPriority, isStatus } from '../../lib/types';
 import { useTicketStore } from '../../store/ticketStore';
 import { Button } from '../ui/Button';
-import { Select } from '../ui/Select';
+import { Dropdown } from '../ui/Dropdown';
 
 export function TicketFilters() {
   const status = useTicketStore((state) => state.statusFilter);
@@ -21,52 +21,49 @@ export function TicketFilters() {
         aria-hidden="true"
         className="mr-1 hidden text-secondary sm:block"
       />
-      <Select
+      <Dropdown
         aria-label="Filter by status"
         containerClassName="w-full sm:w-[150px]"
         value={status}
-        onChange={(event) => {
-          const value = event.target.value;
+        onChange={(value) => {
           if (value === 'All' || isStatus(value)) setStatus(value);
         }}
-      >
-        <option value="All">All statuses</option>
-        {STATUSES.map((item) => (
-          <option key={item}>{item}</option>
-        ))}
-      </Select>
-      <Select
+        options={[
+          { value: 'All', label: 'All statuses' },
+          ...STATUSES.map((item) => ({ value: item, label: item })),
+        ]}
+      />
+      <Dropdown
         aria-label="Filter by priority"
         containerClassName="w-full sm:w-[150px]"
         value={priority}
-        onChange={(event) => {
-          const value = event.target.value;
+        onChange={(value) => {
           if (value === 'All' || isPriority(value)) setPriority(value);
         }}
-      >
-        <option value="All">All priorities</option>
-        {PRIORITIES.map((item) => (
-          <option key={item}>{item}</option>
-        ))}
-      </Select>
-      <Select
+        options={[
+          { value: 'All', label: 'All priorities' },
+          ...PRIORITIES.map((item) => ({ value: item, label: item })),
+        ]}
+      />
+      <Dropdown
         aria-label="Sort tickets"
         containerClassName="w-full sm:w-[150px]"
         value={`${sortKey}:${sortDirection}`}
-        onChange={(event) => {
-          const [key, direction] = event.target.value.split(':');
+        onChange={(value) => {
+          const [key, direction] = value.split(':');
           if (
             (key === 'priority' || key === 'createdAt') &&
             (direction === 'asc' || direction === 'desc')
           )
             setSort(key, direction);
         }}
-      >
-        <option value="createdAt:desc">Newest first</option>
-        <option value="createdAt:asc">Oldest first</option>
-        <option value="priority:desc">High priority</option>
-        <option value="priority:asc">Low priority</option>
-      </Select>
+        options={[
+          { value: 'createdAt:desc', label: 'Newest first' },
+          { value: 'createdAt:asc', label: 'Oldest first' },
+          { value: 'priority:desc', label: 'High priority' },
+          { value: 'priority:asc', label: 'Low priority' },
+        ]}
+      />
       {(status !== 'All' || priority !== 'All' || query) && (
         <Button
           variant="ghost"

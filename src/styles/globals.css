@@ -148,3 +148,16 @@
     scroll-behavior: auto !important;
   }
 }
+@keyframes dropdown-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.dropdown-enter {
+  animation: dropdown-slide-in 120ms ease-out;
+}
