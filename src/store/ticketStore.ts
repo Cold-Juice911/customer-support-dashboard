@@ -22,6 +22,7 @@ export interface TicketStore extends FilterPreferences {
   requestState: RequestState;
   error: string | null;
   selectedTicketId: string | null;
+  filterResetVersion: number;
   sortKey: SortKey;
   sortDirection: SortDirection;
   toast: { id: number; message: string } | null;
@@ -33,7 +34,7 @@ export interface TicketStore extends FilterPreferences {
   selectTicket: (id: string | null) => void;
   updateTicketStatus: (id: string, status: Status) => void;
   updateTicketPriority: (id: string, priority: Priority) => void;
-  setSort: (key: SortKey) => void;
+  setSort: (key: SortKey, direction?: SortDirection) => void;
   dismissToast: () => void;
 }
 
@@ -68,6 +69,7 @@ export const useTicketStore = create<TicketStore>()((set, get) => {
     requestState: 'idle',
     error: null,
     selectedTicketId: null,
+    filterResetVersion: 0,
     sortKey: 'createdAt',
     sortDirection: 'desc',
     toast: null,
@@ -93,7 +95,11 @@ export const useTicketStore = create<TicketStore>()((set, get) => {
       set({ searchQuery: searchQuery.slice(0, 200) }),
     setStatusFilter: (statusFilter) => set({ statusFilter }),
     setPriorityFilter: (priorityFilter) => set({ priorityFilter }),
-    clearFilters: () => set(defaultFilters),
+    clearFilters: () =>
+      set((state) => ({
+        ...defaultFilters,
+        filterResetVersion: state.filterResetVersion + 1,
+      })),
     selectTicket: (id) =>
       set({
         selectedTicketId:
@@ -105,13 +111,14 @@ export const useTicketStore = create<TicketStore>()((set, get) => {
       updateTicket(id, { status }, `Status updated to ${status}`),
     updateTicketPriority: (id, priority) =>
       updateTicket(id, { priority }, `Priority updated to ${priority}`),
-    setSort: (sortKey) =>
+    setSort: (sortKey, direction) =>
       set((state) => ({
         sortKey,
         sortDirection:
-          state.sortKey === sortKey && state.sortDirection === 'desc'
+          direction ??
+          (state.sortKey === sortKey && state.sortDirection === 'desc'
             ? 'asc'
-            : 'desc',
+            : 'desc'),
       })),
     dismissToast: () => set({ toast: null }),
   };

@@ -4,6 +4,7 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      screens: { lg: '1025px' },
       colors: Object.fromEntries(
         [
           'background',
