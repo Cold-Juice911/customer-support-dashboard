@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+.sites-runtime/
+.openai/
+.env*
+!.env.example
+*.local
+*.tsbuildinfo
+.DS_Store
