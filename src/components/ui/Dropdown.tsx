@@ -47,7 +47,6 @@ export function Dropdown({
     if (disabled) return;
     setIsOpen((prev) => {
       if (!prev) {
-
         const trigger = triggerRef.current;
         if (trigger) {
           const rect = trigger.getBoundingClientRect();
@@ -73,7 +72,6 @@ export function Dropdown({
     [onChange, close],
   );
 
-
   useEffect(() => {
     if (!isOpen) return;
     function handleClickOutside(event: MouseEvent) {
@@ -88,7 +86,6 @@ export function Dropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen, close]);
 
-
   useEffect(() => {
     if (!isOpen) return;
     function handleEscapeGlobal(event: KeyboardEvent) {
@@ -100,7 +97,6 @@ export function Dropdown({
     document.addEventListener('keydown', handleEscapeGlobal);
     return () => document.removeEventListener('keydown', handleEscapeGlobal);
   }, [isOpen, close]);
-
 
   useEffect(() => {
     if (!isOpen || highlightedIndex < 0) return;
@@ -174,7 +170,6 @@ export function Dropdown({
       ref={containerRef}
       className={cn('relative inline-flex min-w-0', containerClassName)}
     >
-
       <button
         ref={triggerRef}
         type="button"
@@ -205,7 +200,6 @@ export function Dropdown({
         />
       </button>
 
-
       {isOpen && (
         <ul
           ref={menuRef}
@@ -231,9 +225,7 @@ export function Dropdown({
                 className={cn(
                   'flex cursor-pointer items-center gap-2 px-3 py-2 text-sm transition-colors select-none',
                   isHighlighted && 'bg-hover',
-                  isSelected
-                    ? 'font-semibold text-accent'
-                    : 'text-primary',
+                  isSelected ? 'font-semibold text-accent' : 'text-primary',
                 )}
                 onMouseEnter={() => setHighlightedIndex(index)}
                 onMouseDown={(e) => {
