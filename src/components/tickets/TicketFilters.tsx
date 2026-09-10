@@ -15,7 +15,7 @@ export function TicketFilters() {
   const sortDirection = useTicketStore((state) => state.sortDirection);
   const setSort = useTicketStore((state) => state.setSort);
   return (
-    <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3 sm:px-5">
+    <div className="grid grid-cols-2 items-center gap-2 border-b border-border px-4 py-3 sm:flex sm:flex-wrap sm:px-5">
       <ListFilter
         size={16}
         aria-hidden="true"
@@ -23,6 +23,7 @@ export function TicketFilters() {
       />
       <Select
         aria-label="Filter by status"
+        containerClassName="w-full sm:w-[150px]"
         value={status}
         onChange={(event) => {
           const value = event.target.value;
@@ -36,6 +37,7 @@ export function TicketFilters() {
       </Select>
       <Select
         aria-label="Filter by priority"
+        containerClassName="w-full sm:w-[150px]"
         value={priority}
         onChange={(event) => {
           const value = event.target.value;
@@ -47,32 +49,34 @@ export function TicketFilters() {
           <option key={item}>{item}</option>
         ))}
       </Select>
+      <Select
+        aria-label="Sort tickets"
+        containerClassName="w-full sm:w-[150px]"
+        value={`${sortKey}:${sortDirection}`}
+        onChange={(event) => {
+          const [key, direction] = event.target.value.split(':');
+          if (
+            (key === 'priority' || key === 'createdAt') &&
+            (direction === 'asc' || direction === 'desc')
+          )
+            setSort(key, direction);
+        }}
+      >
+        <option value="createdAt:desc">Newest first</option>
+        <option value="createdAt:asc">Oldest first</option>
+        <option value="priority:desc">High priority</option>
+        <option value="priority:asc">Low priority</option>
+      </Select>
       {(status !== 'All' || priority !== 'All' || query) && (
-        <Button variant="ghost" onClick={clear} className="gap-1 px-2 text-xs">
+        <Button
+          variant="ghost"
+          onClick={clear}
+          className="justify-self-start gap-1 px-2 text-xs"
+        >
           <X size={14} />
           Clear filters
         </Button>
       )}
-      <div className="ml-auto flex items-center gap-1 xl:hidden">
-        <Select
-          aria-label="Sort tickets"
-          value={`${sortKey}:${sortDirection}`}
-          onChange={(event) => {
-            const [key, direction] = event.target.value.split(':');
-            if (
-              (key === 'priority' || key === 'createdAt') &&
-              (direction === 'asc' || direction === 'desc')
-            )
-              setSort(key, direction);
-          }}
-          className="text-xs"
-        >
-          <option value="createdAt:desc">Newest first</option>
-          <option value="createdAt:asc">Oldest first</option>
-          <option value="priority:desc">High priority first</option>
-          <option value="priority:asc">Low priority first</option>
-        </Select>
-      </div>
     </div>
   );
 }
